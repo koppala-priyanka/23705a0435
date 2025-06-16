@@ -1,0 +1,109 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.LinkedList;
+public class Main{
+    public static void main(String[] args) {
+        Graph graph=new Graph(8,false);
+        graph.addEdge(0,1);
+        graph.addEdge(0,2);
+        graph.addEdge(0,7);
+        graph.addEdge(1,0);
+        graph.addEdge(1,4);
+        graph.addEdge(2,0);
+        graph.addEdge(2,3);
+        graph.addEdge(2,4);
+        graph.addEdge(3,2);
+        graph.addEdge(3,5);
+        graph.addEdge(3,6);
+        graph.addEdge(4,1);
+        graph.addEdge(4,2);
+        graph.addEdge(5,3);
+        graph.addEdge(6,3);
+        graph.addEdge(6,7);
+        graph.addEdge(7,0);
+        graph.addEdge(7,6);
+        graph.printGraph();
+        graph.dfs(0,new boolean[8]);
+        System.out.println();
+        graph.bfs();
+    }
+ }
+ class Graph{
+     ArrayList<HashSet<Integer>>graph;
+     int vertices;
+     boolean isDirected;
+     Graph(int vertices,boolean isDirected){
+         this.vertices=vertices;
+         this.graph=new ArrayList<HashSet<Integer>>();
+         for(int i=0;i<vertices;i++){
+             graph.add(new HashSet<Integer>());
+         }
+     }
+    public void addEdge(int src,int dest){
+         if(isValid(src,dest)){
+            this.graph.get(src).add(dest);
+            if(!this.isDirected)
+             graph.get(dest).add(src);
+         }else{
+             System.err.println("Invalid source and destination");
+             for(int i=0;i<this.vertices;i++){
+                 System.out.print(i+" ");
+             }
+             }
+         }
+     public void removeEdge(int src,int dest){
+         if(isValid(src,dest)){
+            this.graph.get(src).remove(dest);
+            if(!this.isDirected)
+             graph.get(dest).remove(src);
+         }else{
+             System.out.println("Invalid source and destination");
+             for(int i=0;i<this.vertices;i++){
+                 System.out.print(i+" ");
+             }
+         }
+     }
+    
+    boolean isHavingEdge(int src, int dest) {
+        return this.graph.get(src).contains(dest);
+    }
+    HashSet<Integer>getNeighbours(int src)throws IndexOutOfBoundsException{
+        if(src>=0&&src<vertices)
+        return this.graph.get(src);
+        throw new IndexOutOfBoundsException("Invalid source and destinations");
+    }
+     boolean isValid(int src,int dest){
+         return src>=0&&dest>=0&&src<this.vertices&&dest<this.vertices&&src!=dest;
+     }
+     void printGraph(){
+             System.out.println(graph);
+     }
+        void dfs(int start,boolean[]visited){
+            visited[start]=true;
+            System.out.print(start+" ");
+            var neighbours=getNeighbours(start);
+            for(int neighbour:neighbours){
+                if(!visited[neighbour]){
+                    dfs(neighbour,visited);
+                    }
+            }
+        }
+        void bfs(){
+            Queue<Integer>q=new LinkedList<>();
+           q.add(0);
+           boolean[]visited=new boolean[vertices];
+           while(!q.isEmpty()){
+               int current=q.remove();
+               if(!visited[current]){
+                   visited[current]=true;
+                   System.out.print(current +" ");
+                   var neighbours=getNeighbours(current);
+                   for(Integer neighbour:neighbours){
+                       q.add(neighbour);
+                   }
+               }
+           }
+        }
+ }
+ 
